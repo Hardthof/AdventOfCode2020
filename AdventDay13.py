@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from datetime import datetime
+from bitarray import bitarray
 
 inputString = '37,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,41,x,x,x,x,x,x,x,x,x,587,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,13,19,x,x,x,23,x,x,x,x,x,29,x,733,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,17'
 #inputString = '7,13,x,x,59,x,31,19' # 1068781
@@ -92,7 +93,7 @@ def part2():
     print(erg)
     '''
 
-    time, step = 0, 1
+    time, step = 0, 1 #buses[0]
     for bus in buses:
         offset = timeOffest[bus]
         while (time + offset) % bus:
