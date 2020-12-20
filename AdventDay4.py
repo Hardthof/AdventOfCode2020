@@ -44,7 +44,8 @@ def isValid(d):
         return False
 
     return True
-    
+
+print('Start', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])    
 f = open('AdventOfCode/Day4.txt', mode='r') 
 seq = [l.replace('\n',' ') for l in f.read().split('\n\n')]
 reqDict = dict.fromkeys(['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid', 'cid'], 0)
@@ -54,3 +55,4 @@ valid = [isValid(d) for d in list(compress(passList, present))]
 
 print('Fields present', present.count(True))
 print('present and valid', valid.count(True))
+print('Done.', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
