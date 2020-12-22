@@ -2,7 +2,6 @@ from datetime import datetime
 import re
 
 mem  = {}
-print(mask)
 
 with open('AdventOfCode/Day14.txt') as f:
     seq = [line.rstrip('\n') for line in f]
@@ -23,7 +22,7 @@ for cmd in seq:
             else: # 0
                 a -= 2 ** i
     else:
-        m = (re.findall("\d+", cmd))
+        m = (re.findall(r"\d+", cmd))
         mem[m[0]] = (int(m[1]) & a) | o
 
 print(sum(mem.values()))

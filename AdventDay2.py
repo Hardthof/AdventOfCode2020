@@ -3,7 +3,7 @@ import re
 
 def isLineValid(l):
 
-    numbers = list(map(int, (re.findall("\d+", l)))) 
+    numbers = list(map(int, (re.findall(r"\d+", l)))) 
     index = re.search(":", l).start()
     s =  l[index -1]
     sub = l[index +2 :]
@@ -13,7 +13,7 @@ def isLineValid(l):
 
 def isLineValidP2(l):
 
-    numbers = list(map(int, (re.findall("\d+", l)))) 
+    numbers = list(map(int, (re.findall(r"\d+", l)))) 
     index = re.search(":", l).start()
     s =  l[index -1]
     sub = l[index +2 :]
