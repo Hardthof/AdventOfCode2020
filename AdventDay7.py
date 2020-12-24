@@ -5,29 +5,26 @@ def expandBagRule(v):
     s = {sub.split(' ', 1)[1]:sub.split(' ', 1)[0] for sub in s}
     return s
 
-def visitBag(bags, good, bad, k):
+def find_parents(child):
+    for parent in bags:
+        contents = bags[parent]
+        if child in contents:
+            find_parents(parent)
+            good.add(parent)
+    return
 
-    if 'other bag' in bags[k]:
-        bad.append(k)
-        return False
+def countBags(child, count):
 
-    if 'shiny gold bag' in bags[k]:
-        good.append(k)
-        return True
+    if 'other bag' in bags[child]:
+        #print(child, bags[child])
+        return 1
 
-    if k in good:
-        return True
+    for bag in bags[child]:
+        #print(bag, bags[child][bag])
+        count += countBags(bag, 1) * int(bags[child][bag])
 
-    if k in bad:
-        return False
-
-    for bag in bags[k]:
-        if visitBag(bags, good, bad, bag):
-            good.append(k)
-            return True
-
-    bad.append(k)
-    return False
+    #print(child, 'contains ', count, ' other bags')
+    return count
 
 print('start', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
 with open('AdventOfCode/Day7.txt') as f:
@@ -35,29 +32,13 @@ with open('AdventOfCode/Day7.txt') as f:
 
     # get set of possible bags
 bags = {s[:s.index("contain")-1] : s[s.index("contain")+8:] for s in seq}
-good,bad  = [],[]
+good  = set()
 
 for k, v in bags.items():
-    if 'shiny gold bag' not in v:
         bags[k] = (expandBagRule(v))
 
-print(bags, sep ='\n')
+find_parents('shiny gold bag')
+print(countBags('shiny gold bag', 0))
 
-for k, v in bags.items():
-    visitBag(bags, good, bad, k)
-
-# for bag in good:
-#     if not any(bag in s for s in seq):
-#         print (bag, 'not in bags?')
-#     if bag in bad:
-#         print('thats odd ', bag)
-
-# for bag in bad:
-#     if not any(bag in s for s in seq):
-#         print (bag, 'not in bags?')
-#     if bag in good:
-#         print('thats odd ', bag)
-
-#print(*good, sep= '\n')
-print('good: ', len(good), 'bad: ', len(bad), 'all: ', len(bags), 'len seq:', len(seq))
+print('good: ', len(good), 'all:', len(seq))
 print('end', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
