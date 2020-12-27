@@ -3,7 +3,7 @@ from datetime import datetime
 def bt(data):
     #print('depth: ', len(data['hist']), '\n', data)
     if data['stp'] in data['hist']:
-        print('last vlaue is: ', data['accumulator'])
+        #print('last vlaue is: ', data['accumulator'])
         return False
 
     nd = data.copy()
