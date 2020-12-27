@@ -11,13 +11,10 @@ def isValid(x, v):
 
 def scan(seq, target):
     dq = collections.deque(seq[:0], None)
-
     for i in range(len(seq)):
         dq.append(seq[i])
         while sum(list(dq)) > target and len(dq) > 2: dq.popleft()        
-        v = sum(list(dq))
-        if v == target: break
-
+        if sum(list(dq)) == target: break
     return list(dq)
 
 print('start', datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
