@@ -6,8 +6,9 @@ class Universe:
     def __init__(self, n, file):
         self.n = n
         self.file = file  
+        self.Coordinate = namedtuple('Coordinate', ['dim' + str(s) for s in range(n)], defaults = (0,) * n)
         self.universe = self.populateUniverse(file)
-        self.neighbors = set(Coordinate(*offset) for offset in product([-1, 0, 1], repeat = n) if offset != (0,) * n)
+        self.neighbors = set(self.Coordinate(*offset) for offset in product([-1, 0, 1], repeat = n) if offset != (0,) * n)
 
     # create all non existent neighbors of active cubes
     def expandUniverse(self, universe):
@@ -42,11 +43,11 @@ class Universe:
         with open(file) as f:
             for y,l in enumerate(f.readlines()):
                 for x in range(len(l.rstrip('\n'))):
-                    universe[Coordinate(x,y)] = (l[x] == '#')
+                    universe[self.Coordinate(x,y)] = (l[x] == '#')
         return universe
 
     def addCoord(self, coord, offset):
-        return Coordinate(*map(sum, zip(coord, offset)))
+        return self.Coordinate(*map(sum, zip(coord, offset)))
 
     def start(self, n):
         for _ in range(n):
@@ -54,11 +55,6 @@ class Universe:
 
         print(sum(map((True).__eq__, self.universe.values())))
 
-Coordinate = namedtuple('Coordinate', ['x', 'y', 'z'], defaults=(0,0,0))
-P1 = Universe(n = 3, file = 'AdventOfCode/Day17.txt')
-cProfile.run('P1.start(6)')
-
-Coordinate = namedtuple('Coordinate',  ['x', 'y', 'z', 'w'], defaults=(0,0,0,0))
-P2 = Universe(n = 4, file = 'AdventOfCode/Day17.txt')
-cProfile.run('P2.start(6)')
+cProfile.run('Universe(n = 3, file = "AdventOfCode/Day17.txt").start(6)')
+cProfile.run('Universe(n = 4, file = "AdventOfCode/Day17.txt").start(6)')
 
