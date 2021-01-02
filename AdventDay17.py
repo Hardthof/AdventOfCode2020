@@ -52,7 +52,6 @@ class Universe:
     def start(self, n):
         for _ in range(n):
             self.cycleUniverse()
-
         print(sum(map((True).__eq__, self.universe.values())))
 
 cProfile.run('Universe(n = 3, file = "AdventOfCode/Day17.txt").start(6)')
