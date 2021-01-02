@@ -50,7 +50,5 @@ class Math:
         print(sum(self.reduce(l)[0] for l in self.tokens))
 
 if __name__ == '__main__':
-    m = Math("AdventOfCode/Day18.txt")
-    m.sum()
-    m2 = Math("AdventOfCode/Day18.txt", sense=True)
-    m2.sum()
+    Math("AdventOfCode/Day18.txt").sum()
+    Math("AdventOfCode/Day18.txt", sense=True).sum()
