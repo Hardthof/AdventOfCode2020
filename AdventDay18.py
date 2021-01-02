@@ -1,5 +1,3 @@
-import cProfile
-
 class Math:
     def __init__(self, file, sense = False):
         self.tokens = self.parseInput(file)
@@ -51,8 +49,8 @@ class Math:
     def sum(self):
         print(sum(self.reduce(l)[0] for l in self.tokens))
 
-# cProfile.run('')
-m = Math("AdventOfCode/Day18.txt")
-m.sum()
-m2 = Math("AdventOfCode/Day18.txt", sense=True)
-m2.sum()
+if __name__ == '__main__':
+    m = Math("AdventOfCode/Day18.txt")
+    m.sum()
+    m2 = Math("AdventOfCode/Day18.txt", sense=True)
+    m2.sum()
