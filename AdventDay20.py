@@ -36,7 +36,7 @@ class Mapper:
         self.erg = np.prod(self.corner, dtype=np.ulonglong)
         self.placeFragments(np.zeros(shape=(n,n)), set(self.fragments))
         self.monster = np.array([list(s) for s in '                  # \n#    ##    ##    ###\n #  #  #  #  #  #   '.split('\n')]) == '#'
-        print(self.findTheMonstersAndCountThem())
+        # self.findTheMonstersAndCountThem()
         print(self.erg)
         
     def parseInput(self, file):
@@ -45,16 +45,16 @@ class Mapper:
 
     def fitsNeighbors(self, matrix, node, pos):
         if pos[0] > 0 and matrix[pos[0] - 1, pos[1]] > 0:
-            if not np.array_equal(node.getLeft(), self.fragments[matrix[pos[0] - 1, pos[1]]].getRight()):
+            if not np.array_equal(node.getTop(), self.fragments[matrix[pos[0] - 1, pos[1]]].getBottom()):
                 return False
         if pos[0] < matrix.shape[0] - 1 and matrix[pos[0] + 1, pos[1]] > 0:
-            if not np.array_equal(node.getRight(), self.fragments[matrix[pos[0] + 1, pos[1]]].getLeft()):
+            if not np.array_equal(node.getBottom(), self.fragments[matrix[pos[0] + 1, pos[1]]].getTop()):
                 return False
         if pos[1] > 0 and matrix[pos[0], pos[1] - 1] > 0:
-            if not np.array_equal(node.getTop(), self.fragments[matrix[pos[0], pos[1] - 1]].getBottom()):
+            if not np.array_equal(node.getLeft(), self.fragments[matrix[pos[0], pos[1] - 1]].getRight()):
                 return False
         if pos[1] < matrix.shape[1] - 1 and matrix[pos[0], pos[1] + 1] > 0:
-            if not np.array_equal(node.getBottom(), self.fragments[matrix[pos[0], pos[1] + 1]].getTop()):
+            if not np.array_equal(node.getRight(), self.fragments[matrix[pos[0], pos[1] + 1]].getLeft()):
                 return False
         return True 
 
@@ -82,27 +82,30 @@ class Mapper:
             self.window_stack()
 
     def window_stack(self):
-        print('New Permutation to scan')
+        er = False
         width = self.monster.shape[0]
-        height = self.monster.shape[1]
-        stack = []                                
+        height = self.monster.shape[1]                              
         for i in range(0, self.sea.shape[0]-width+1):
             for j in range(0, self.sea.shape[1]-height+1):
-                window = self.sea[i:i+width,j:j+height] #.reshape((-1,1))
-                stack.append(window)
-        for item in stack:
-            if np.array_equal(self.monster, np.logical_and(self.monster, item)):
-                print(item)
+                window = self.sea[i:i+width,j:j+height] 
+                if np.array_equal(self.monster, np.logical_and(self.monster, window)):
+                    unique, counts = np.unique(self.sea, return_counts=True)
+                    self.sea[i:i+width,j:j+height] = np.logical_and(self.sea[i:i+width,j:j+height], np.bitwise_not(self.monster))
+                    er = True
+        if er:
+            unique, counts = np.unique(self.sea, return_counts=True)
+            print('sea:',  dict(zip(unique, counts))[True])
+            
 
     def checkIfEdgeIsOuter(self, edge):
         return (edge == self.unique).all(axis=1).any() 
 
     def posCheck(self, node, matrix, x,y):
         X,Y = matrix.shape[0] - 1, matrix.shape[1] - 1
-        # if y == 0 and self.checkIfEdgeIsOuter(self.fragments[node].getTop()): return False                  
-        # if y == Y and self.checkIfEdgeIsOuter(self.fragments[node].getBottom()): return False 
-        # if x == 0 and self.checkIfEdgeIsOuter(self.fragments[node].getLeft()): return False 
-        # if x == X and self.checkIfEdgeIsOuter(self.fragments[node].getRight()): return False 
+        # if x == 0 and self.checkIfEdgeIsOuter(self.fragments[node].getTop()): return False                  
+        # if x == X and self.checkIfEdgeIsOuter(self.fragments[node].getBottom()): return False 
+        # if y == 0 and self.checkIfEdgeIsOuter(self.fragments[node].getLeft()): return False 
+        # if y == Y and self.checkIfEdgeIsOuter(self.fragments[node].getRight()): return False 
         if  (x == 0 or x == X) and (y == 0 or y == Y): return node in self.corner
         if x == 0 or x == X or y == 0 or y == Y: return node in self.edges
         return not (node in self.edges or node in self.corner)
@@ -131,12 +134,9 @@ class Mapper:
             for x in range(matrix.shape[0]):
                 for y in range(matrix.shape[1]):
                     self.sea[x*8:x*8+8,y*8:y*8+8] = self.fragments[matrix[x,y]].getData()
-            print(matrix)
-            print(matrix[0,0], '\n', self.fragments[matrix[0,0]].getData())
-            print(matrix[1,0], '\n', self.fragments[matrix[1,0]].getData())
             return True
         return False # Filled in all unused
 
 if __name__ == '__main__':
-    # cProfile.run('Mapper("AdventOfCode/Day20.txt")')
-    Mapper("AdventOfCode/Day20Example.txt")
+    cProfile.run('Mapper("AdventOfCode/Day20.txt")')
+    # Mapper("AdventOfCode/Day20.txt")
